@@ -104,35 +104,101 @@ def avaliar_covid(in_met_defuzz,
 
     # REGRAS COVID
 
-    # TOSSE = BAIXA , FEBRE= BAIXA, CORIZA= BAIXA, DORGARGANTA= BAIXA, DIFICULDADERESPIRAR= BAIXA, ANOSMIA=BAIXA , disturbiosGastrintestinais
-    rtossebaixaum = ctrl.Rule(
+    #Tosse Baixa
+
+    r1 = ctrl.Rule(
         tosse['baixa'] & febre['baixa'] & coriza['baixa'] & dorGargante['baixa'] & dificuldadeRespirar['baixa'] &
         anosmia['baixa'] &
         disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
         chanceEstarContaminado['baixa'])
 
-    rtossebaixadois = ctrl.Rule(
-        tosse['baixa'] & febre['alta'] & coriza['alta'] & dorGargante['alta'] & dificuldadeRespirar['baixa'] & anosmia[
-            'baixa'] &
+    # Febre
+    r2 = ctrl.Rule(
+        tosse['baixa'] & febre['media'] & coriza['baixa'] & dorGargante['baixa'] & dificuldadeRespirar['baixa'] &
+        anosmia['baixa'] &
         disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
-        chanceEstarContaminado['alta'])
+        chanceEstarContaminado['baixa'])
 
-    # Completar
-
-
-
-
-
-
+    r3 = ctrl.Rule(
+        tosse['baixa'] & febre['alta'] & coriza['baixa'] & dorGargante['baixa'] & dificuldadeRespirar['baixa'] &
+        anosmia['baixa'] &
+        disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
+        chanceEstarContaminado['baixa'])
 
 
+    #Coriza
+    r4 = ctrl.Rule(
+        tosse['baixa'] & febre['baixa'] & coriza['media'] & dorGargante['baixa'] & dificuldadeRespirar['baixa'] &
+        anosmia['baixa'] &
+        disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
+        chanceEstarContaminado['baixa'])
+
+    r5 = ctrl.Rule(
+        tosse['baixa'] & febre['baixa'] & coriza['alta'] & dorGargante['baixa'] & dificuldadeRespirar['baixa'] &
+        anosmia['baixa'] &
+        disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
+        chanceEstarContaminado['baixa'])
+
+
+    #Dor de garganta
+    r6 = ctrl.Rule(
+        tosse['baixa'] & febre['baixa'] & coriza['baixa'] & dorGargante['media'] & dificuldadeRespirar['baixa'] &
+        anosmia['baixa'] &
+        disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
+        chanceEstarContaminado['baixa'])
+
+
+    r6 = ctrl.Rule(
+        tosse['baixa'] & febre['baixa'] & coriza['baixa'] & dorGargante['alta'] & dificuldadeRespirar['baixa'] &
+        anosmia['baixa'] &
+        disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
+        chanceEstarContaminado['baixa'])
+
+    #Dificuldade respirar
+    r7 = ctrl.Rule(
+        tosse['baixa'] & febre['alta'] & coriza['baixa'] & dorGargante['media'] & dificuldadeRespirar['media'] &
+        anosmia['baixa'] &
+        disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
+        chanceEstarContaminado['baixa'])
+
+
+    r8 = ctrl.Rule(
+        tosse['baixa'] & febre['alta'] & coriza['baixa'] & dorGargante['alta'] & dificuldadeRespirar['alta'] &
+        anosmia['baixa'] &
+        disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
+        chanceEstarContaminado['baixa'])
+
+
+    # Anosmia
+    r7 = ctrl.Rule(
+        tosse['baixa'] & febre['alta'] & coriza['baixa'] & dorGargante['media'] & dificuldadeRespirar['media'] &
+        anosmia['media'] &
+        disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
+        chanceEstarContaminado['baixa'])
+
+    r8 = ctrl.Rule(
+        tosse['baixa'] & febre['alta'] & coriza['baixa'] & dorGargante['alta'] & dificuldadeRespirar['alta'] &
+        anosmia['baixa'] &
+        disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
+        chanceEstarContaminado['baixa'])
+
+
+
+
+
+    #Em dúvida sobre as regras
 
 
 
 
 
 
-    chanceEstarContaminado_ctrl = ctrl.ControlSystem([rtossebaixaum, rtossebaixadois])
+
+
+
+
+
+    chanceEstarContaminado_ctrl = ctrl.ControlSystem([r1, r2])
 
     # define o simulador do covid
     chanceEstarContaminado_simul = ctrl.ControlSystemSimulation(chanceEstarContaminado_ctrl)

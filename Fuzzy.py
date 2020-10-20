@@ -1,191 +1,123 @@
 # importando bibliotecas necessárias para a execução do código
 import sys
 
-import matplotlib.pyplot as plt
 import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 
 
-##MODELO REFERENCIA
-
-# função para acumulação de consequentes
-# por padrão, a API acumula utilizando a função MAX,
-# o que altera o resultado mostrado nos slides (disponível no livro do Coppin)
 def acc(*args):
     return np.sum(args)
 
 
-def gestao_estoque(in_met_defuzz, in_nivel_estoque,
-                   in_demanda, in_print_state=False):
+def avaliar_covid(in_met_defuzz,
+                  in_tosse, in_febre, in_coriza, in_dorGarganta,
+                  in_dificuldadeRespirar, in_anosmia, in_disturbiosGastrintestinais,
+                  in_astenia, in_hiporexia, in_dispneia, in_print_state=False):
+    # Definição
+    # Tosse
+    # Febre
+    # Coriza
+    # Dor de garganta
+    # Dificuldade para respirar
+    # Perda de olfato (anosmia)
+    # Alteração do paladar (ageusia)
+    # Distúrbios gastrintestinais (náuseas/vômitos/diarreia)
+    # Cansaço (astenia)
+    # Diminuição do apetite (hiporexia)
+    # Dispnéia ( falta de ar)
 
+    # Antecedentes
+    tosse = ctrl.Antecedent(np.arange(0, 100, 0.1), 'tosse')
+    febre = ctrl.Antecedent(np.arange(0, 100, 0.1), 'febre')
+    coriza = ctrl.Antecedent(np.arange(0, 100, 0.1), 'coriza')
+    dorGargante = ctrl.Antecedent(np.arange(0, 100, 0.1), 'dorGarganta')
+    dificuldadeRespirar = ctrl.Antecedent(np.arange(0, 100, 0.1), 'dificuldadeRespirar')
+    anosmia = ctrl.Antecedent(np.arange(0, 100, 0.1), 'anosmia')
+    disturbiosGastrintestinais = ctrl.Antecedent(np.arange(0, 100, 0.1), 'disturbiosGastrintestinais')
+    astenia = ctrl.Antecedent(np.arange(0, 100, 0.1), 'astenia')
+    hiporexia = ctrl.Antecedent(np.arange(0, 100, 0.1), 'hiporexia')
+    dispneia = ctrl.Antecedent(np.arange(0, 100, 0.1), 'dispneia')
 
-    # Definição de antecedentes e consequentes
-    print(plt);
-    nivel_estoque = ctrl.Antecedent(np.arange(0, 100, 0.1), 'nivel_estoque')
-    demanda = ctrl.Antecedent(np.arange(0, 100, 0.1), 'demanda')
+    # Consequentes
 
-
-    atendimento = ctrl.Consequent(np.arange(0, 100, 0.1), 'atendimento', defuzzify_method=in_met_defuzz)
-    atendimento.accumulation_method = acc
-
-    reposicao = ctrl.Consequent(np.arange(0, 100, 0.1), 'reposicao', defuzzify_method=in_met_defuzz)
-    reposicao.accumulation_method = acc
-
-    licitacao = ctrl.Consequent(np.arange(0, 100, 0.1), 'licitacao', defuzzify_method=in_met_defuzz)
-    licitacao.accumulation_method = acc
-
-
-
-
-
+    # Chance de estar com covid19
+    chanceEstarContaminado = ctrl.Consequent(np.arange(0, 100, 0.1), 'chanceEstarContaminado',
+                                             defuzzify_method=in_met_defuzz)
+    chanceEstarContaminado.accumulation_method = acc
 
     # Entradas
+    # Tosse
+    tosse['baixa'] = fuzz.trimf(tosse.universe, [0, 0, 35])
+    tosse['media'] = fuzz.trimf(tosse.universe, [20, 45, 85])
+    tosse['alta'] = fuzz.trimf(tosse.universe, [70, 100, 100])
 
+    # Febre
+    febre['baixa'] = fuzz.trimf(febre.universe, [0, 0, 35])
+    febre['media'] = fuzz.trimf(febre.universe, [20, 45, 85])
+    febre['alta'] = fuzz.trimf(febre.universe, [70, 100, 100])
 
-    # Nível Estoque
-    nivel_estoque['baixa'] = fuzz.trimf(nivel_estoque.universe, [0, 0, 45])
-    nivel_estoque['media'] = fuzz.trimf(nivel_estoque.universe, [30, 50, 86])
-    nivel_estoque['alta'] = fuzz.trimf(nivel_estoque.universe, [70, 100, 100])
+    # Coriza
+    coriza['baixa'] = fuzz.trimf(coriza.universe, [0, 0, 35])
+    coriza['media'] = fuzz.trimf(coriza.universe, [20, 45, 85])
+    coriza['alta'] = fuzz.trimf(coriza.universe, [70, 100, 100])
 
+    # DorGarganta
+    dorGargante['baixa'] = fuzz.trimf(dorGargante.universe, [0, 0, 35])
+    dorGargante['media'] = fuzz.trimf(dorGargante.universe, [20, 45, 85])
+    dorGargante['alta'] = fuzz.trimf(dorGargante.universe, [70, 100, 100])
 
-    # Demanda
-    demanda['baixa'] = fuzz.trimf(nivel_estoque.universe, [0, 0, 35])
-    demanda['media'] = fuzz.trimf(nivel_estoque.universe, [20, 45, 85])
-    demanda['alta'] = fuzz.trimf(nivel_estoque.universe, [70, 100, 100])
+    # DificuldadeRespirar
+    dificuldadeRespirar['baixa'] = fuzz.trimf(dificuldadeRespirar.universe, [0, 0, 35])
+    dificuldadeRespirar['media'] = fuzz.trimf(dificuldadeRespirar.universe, [20, 45, 85])
+    dificuldadeRespirar['alta'] = fuzz.trimf(dificuldadeRespirar.universe, [70, 100, 100])
 
+    # Anosmia
+    anosmia['baixa'] = fuzz.trimf(anosmia.universe, [0, 0, 35])
+    anosmia['media'] = fuzz.trimf(anosmia.universe, [20, 45, 85])
+    anosmia['alta'] = fuzz.trimf(anosmia.universe, [70, 100, 100])
 
+    # DisturbiosGastrintestinais
+    disturbiosGastrintestinais['baixa'] = fuzz.trimf(disturbiosGastrintestinais.universe, [0, 0, 35])
+    disturbiosGastrintestinais['media'] = fuzz.trimf(disturbiosGastrintestinais.universe, [20, 45, 85])
+    disturbiosGastrintestinais['alta'] = fuzz.trimf(disturbiosGastrintestinais.universe, [70, 100, 100])
 
+    # Astenia
+    astenia['baixa'] = fuzz.trimf(astenia.universe, [0, 0, 35])
+    astenia['media'] = fuzz.trimf(astenia.universe, [20, 45, 85])
+    astenia['alta'] = fuzz.trimf(astenia.universe, [70, 100, 100])
 
+    # Hiporexia
+    hiporexia['baixa'] = fuzz.trimf(hiporexia.universe, [0, 0, 35])
+    hiporexia['media'] = fuzz.trimf(hiporexia.universe, [20, 45, 85])
+    hiporexia['alta'] = fuzz.trimf(hiporexia.universe, [70, 100, 100])
 
-
-
-
-
-
+    # Dispneia
+    dispneia['baixa'] = fuzz.trimf(dispneia.universe, [0, 0, 35])
+    dispneia['media'] = fuzz.trimf(dispneia.universe, [20, 45, 85])
+    dispneia['alta'] = fuzz.trimf(dispneia.universe, [70, 100, 100])
 
     # Saídas
+    chanceEstarContaminado['baixa'] = fuzz.trimf(chanceEstarContaminado.universe, [0, 0, 45])
+    chanceEstarContaminado['media'] = fuzz.trimf(chanceEstarContaminado.universe, [20, 45, 85])
+    chanceEstarContaminado['alta'] = fuzz.trimf(chanceEstarContaminado.universe, [70, 100, 100])
 
-    # Atendimento
-    atendimento['com_autorizacao'] = fuzz.trimf(nivel_estoque.universe, [0, 0, 45])
-    atendimento['com_restricao'] = fuzz.trimf(nivel_estoque.universe, [20, 45, 85])
-    atendimento['normal'] = fuzz.trimf(nivel_estoque.universe, [70, 100, 100])
+    # REGRAS COVID
 
+    # TOSSE = BAIXA , FEBRE= BAIXA, CORIZA= BAIXA, DORGARGANTA= BAIXA, DIFICULDADERESPIRAR= BAIXA, ANOSMIA=BAIXA , disturbiosGastrintestinais
+    rtossebaixaum = ctrl.Rule(
+        tosse['baixa'] & febre['baixa'] & coriza['baixa'] & dorGargante['baixa'] & dificuldadeRespirar['baixa'] &
+        anosmia['baixa'] &
+        disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
+        chanceEstarContaminado['baixa'])
 
-    # Reposicao
-    reposicao['baixa'] = fuzz.trimf(nivel_estoque.universe, [0, 0, 45])
-    reposicao['media'] = fuzz.trimf(nivel_estoque.universe, [20, 45, 85])
-    reposicao['alta'] = fuzz.trimf(nivel_estoque.universe, [70, 100, 100])
+    rtossebaixadois = ctrl.Rule(
+        tosse['baixa'] & febre['alta'] & coriza['alta'] & dorGargante['alta'] & dificuldadeRespirar['baixa'] & anosmia[
+            'baixa'] &
+        disturbiosGastrintestinais['baixa'] & astenia['baixa'] & hiporexia['baixa'] & dispneia['baixa'],
+        chanceEstarContaminado['alta'])
 
-    # Licitacao
-    licitacao['sim'] = fuzz.trimf(nivel_estoque.universe, [0, 0, 70])
-    licitacao['nao'] = fuzz.trimf(nivel_estoque.universe, [45, 100, 100])
-
-
-
-
-
-
-    # definição das regras
-
-
-    #REPOSICAO
-
-    #EstoqueBaixo
-    rReposicaonivelEstoqueBaixoDemandaAlta = ctrl.Rule(nivel_estoque['baixa'] & demanda['alta'], reposicao['alta'])
-    rReposicaonivelEstoqueBaixoDemandaMedia = ctrl.Rule(nivel_estoque['baixa'] & demanda['media'], reposicao['alta'])
-    rReposicaonivelEstoqueBaixoDemandaBaixa = ctrl.Rule(nivel_estoque['baixa'] & demanda['baixa'], reposicao['media'])
-
-
-    #EstoqueMedia
-    rReposicaonivelEstoqueMediaDemandaAlta = ctrl.Rule(nivel_estoque['media'] & demanda['alta'], reposicao['alta'])
-    rReposicaonivelEstoqueMediaDemandaMedia = ctrl.Rule(nivel_estoque['media'] & demanda['media'], reposicao['media'])
-    rReposicaonivelEstoqueMediaDemandaBaixa = ctrl.Rule(nivel_estoque['media'] & demanda['baixa'], reposicao['baixa'])
-
-
-    # EstoqueAlta
-    rReposicaonivelEstoqueAltaDemandaAlta = ctrl.Rule(nivel_estoque['alta'] & demanda['alta'], reposicao['alta'])
-    rReposicaonivelEstoqueAltaDemandaMedia = ctrl.Rule(nivel_estoque['alta'] & demanda['media'], reposicao['baixa'])
-    rReposicaonivelEstoqueAltaDemandaBaixa = ctrl.Rule(nivel_estoque['alta'] & demanda['baixa'], reposicao['baixa'])
-
-
-
-
-    # ATENDIMENTO
-
-    # EstoqueBaixo
-    rAtendimentonivelEstoqueBaixoDemandaAlta = ctrl.Rule(nivel_estoque['baixa'] & demanda['alta'], atendimento['com_autorizacao'])
-    rAtendimentonivelEstoqueBaixoDemandaMedia = ctrl.Rule(nivel_estoque['baixa'] & demanda['media'], atendimento['com_restricao'])
-    rAtendimentonivelEstoqueBaixoDemandaBaixa = ctrl.Rule(nivel_estoque['baixa'] & demanda['baixa'], atendimento['com_restricao'])
-
-    # EstoqueMedia
-    rAtendimentonivelEstoqueMediaDemandaAlta = ctrl.Rule(nivel_estoque['media'] & demanda['alta'], atendimento['com_restricao'])
-    rAtendimentonivelEstoqueMediaDemandaMedia = ctrl.Rule(nivel_estoque['media'] & demanda['media'], atendimento['normal'])
-    rAtendimentonivelEstoqueMediaDemandaBaixa = ctrl.Rule(nivel_estoque['media'] & demanda['baixa'], atendimento['normal'])
-
-    # EstoqueAlta
-    rAtendimentonivelEstoqueAltaDemandaAlta = ctrl.Rule(nivel_estoque['alta'] & demanda['alta'], atendimento['normal'])
-    rAtendimentonivelEstoqueAltaDemandaMedia = ctrl.Rule(nivel_estoque['alta'] & demanda['media'], atendimento['normal'])
-    rAtendimentonivelEstoqueAltaDemandaBaixa = ctrl.Rule(nivel_estoque['alta'] & demanda['baixa'], atendimento['normal'])
-
-
-
-
-
-
-    # LICITACAO
-
-    # EstoqueBaixo
-    rLicitacaonivelEstoqueBaixoDemandaAlta = ctrl.Rule(nivel_estoque['baixa'] & demanda['alta'], licitacao['sim'])
-    rLicitacaonivelEstoqueBaixoDemandaMedia = ctrl.Rule(nivel_estoque['baixa'] & demanda['media'], licitacao['sim'])
-    rLicitacaonivelEstoqueBaixoDemandaBaixa = ctrl.Rule(nivel_estoque['baixa'] & demanda['baixa'], licitacao['nao'])
-
-    # EstoqueMedia
-    rLicitacaonivelEstoqueMediaDemandaAlta = ctrl.Rule(nivel_estoque['media'] & demanda['alta'], licitacao['sim'])
-    rLicitacaonivelEstoqueMediaDemandaMedia = ctrl.Rule(nivel_estoque['media'] & demanda['media'], licitacao['nao'])
-    rLicitacaonivelEstoqueMediaDemandaBaixa = ctrl.Rule(nivel_estoque['media'] & demanda['baixa'], licitacao['nao'])
-
-    # EstoqueAlta
-    rLicitacaonivelEstoqueAltaDemandaAlta = ctrl.Rule(nivel_estoque['alta'] & demanda['alta'], licitacao['nao'])
-    rLicitacaonivelEstoqueAltaDemandaMedia = ctrl.Rule(nivel_estoque['alta'] & demanda['media'], licitacao['nao'])
-    rLicitacaonivelEstoqueAltaDemandaBaixa = ctrl.Rule(nivel_estoque['alta'] & demanda['baixa'], licitacao['nao'])
-
-    # define controlador do sistema
-    reposicao_ctrl = ctrl.ControlSystem([rReposicaonivelEstoqueBaixoDemandaBaixa, rReposicaonivelEstoqueBaixoDemandaMedia, rReposicaonivelEstoqueBaixoDemandaAlta,
-                                    rReposicaonivelEstoqueMediaDemandaBaixa,rReposicaonivelEstoqueMediaDemandaMedia,rReposicaonivelEstoqueMediaDemandaAlta,
-                                    rReposicaonivelEstoqueAltaDemandaBaixa,rReposicaonivelEstoqueAltaDemandaMedia,rReposicaonivelEstoqueAltaDemandaAlta])
-
-    atendimento_ctrl = ctrl.ControlSystem([rAtendimentonivelEstoqueBaixoDemandaBaixa, rAtendimentonivelEstoqueBaixoDemandaMedia, rAtendimentonivelEstoqueBaixoDemandaAlta,
-                                    rAtendimentonivelEstoqueMediaDemandaBaixa,rAtendimentonivelEstoqueMediaDemandaMedia,rAtendimentonivelEstoqueMediaDemandaAlta,
-                                    rAtendimentonivelEstoqueAltaDemandaBaixa,rAtendimentonivelEstoqueAltaDemandaMedia,rAtendimentonivelEstoqueAltaDemandaAlta])
-
-    licitacao_ctrl = ctrl.ControlSystem([rLicitacaonivelEstoqueBaixoDemandaBaixa, rLicitacaonivelEstoqueBaixoDemandaMedia, rLicitacaonivelEstoqueBaixoDemandaAlta,
-                                    rLicitacaonivelEstoqueMediaDemandaBaixa,rLicitacaonivelEstoqueMediaDemandaMedia,rLicitacaonivelEstoqueMediaDemandaAlta,
-                                    rLicitacaonivelEstoqueAltaDemandaBaixa,rLicitacaonivelEstoqueAltaDemandaMedia,rLicitacaonivelEstoqueAltaDemandaAlta])
-
-
-
-    # define o simulador de freio
-    reposicao_simul = ctrl.ControlSystemSimulation(reposicao_ctrl)
-    atendimento_simul = ctrl.ControlSystemSimulation(atendimento_ctrl)
-    licitacao_simul = ctrl.ControlSystemSimulation(licitacao_ctrl)
-
-    reposicao_simul.input['nivel_estoque'] = in_nivel_estoque
-    reposicao_simul.input['demanda'] = in_demanda
-
-    reposicao_simul.compute()
-
-
-    atendimento_simul.input['nivel_estoque'] = in_nivel_estoque
-    atendimento_simul.input['demanda'] = in_demanda
-
-    atendimento_simul.compute()
-
-
-    licitacao_simul.input['nivel_estoque'] = in_nivel_estoque
-    licitacao_simul.input['demanda'] = in_demanda
-
-    licitacao_simul.compute()
+    # Completar
 
 
 
@@ -193,24 +125,40 @@ def gestao_estoque(in_met_defuzz, in_nivel_estoque,
 
 
 
+
+
+
+
+
+
+
+    chanceEstarContaminado_ctrl = ctrl.ControlSystem([rtossebaixaum, rtossebaixadois])
+
+    # define o simulador do covid
+    chanceEstarContaminado_simul = ctrl.ControlSystemSimulation(chanceEstarContaminado_ctrl)
+    chanceEstarContaminado_simul.input['tosse'] = in_tosse
+    chanceEstarContaminado_simul.input['febre'] = in_febre
+    chanceEstarContaminado_simul.input['coriza'] = in_coriza
+    chanceEstarContaminado_simul.input['dorGarganta'] = in_dorGarganta
+    chanceEstarContaminado_simul.input['dificuldadeRespirar'] = in_dificuldadeRespirar
+    chanceEstarContaminado_simul.input['anosmia'] = in_anosmia
+    chanceEstarContaminado_simul.input['disturbiosGastrintestinais'] = in_disturbiosGastrintestinais
+    chanceEstarContaminado_simul.input['astenia'] = in_astenia
+    chanceEstarContaminado_simul.input['hiporexia'] = in_hiporexia
+    chanceEstarContaminado_simul.input['dispneia'] = in_dispneia
+
+    chanceEstarContaminado_simul.compute()
 
     if (in_print_state):
         if (sys.version_info[0] == 2):
-            reposicao_simul.print_state()
-            atendimento_simul.print_state()
-            licitacao_simul.print_state()
+            chanceEstarContaminado_simul.print_state()
         else:
             print('Versão do Python não compatível para impressão de sumário.')
 
-    print(reposicao_simul.output['reposicao'])
-    print(atendimento_simul.output['atendimento'])
-    print(licitacao_simul.output['licitacao'])
-    reposicao.view(sim=reposicao_simul)
-    atendimento.view(sim=atendimento_simul)
-    licitacao.view(sim=licitacao_simul)
+    print(chanceEstarContaminado_simul.output['chanceEstarContaminado'])
+    chanceEstarContaminado.view(sim=chanceEstarContaminado_simul)
 
 
-
-
-#adicione à chamada da função as variáveis linguísticas dos antecedentes
-gestao_estoque('centroid', 25, 8)
+# adicione à chamada da função as variáveis linguísticas dos antecedentes
+# Os dados aqui estão sendo passados setados, será interessante, trocalos por uma interface onde pergunta os parametros
+avaliar_covid('centroid', 5, 5, 4, 6, 7, 8, 9, 4, 7, 9)

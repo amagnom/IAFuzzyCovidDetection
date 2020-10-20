@@ -14,7 +14,7 @@ def avaliar_covid(in_met_defuzz,
                   in_tosse, in_febre, in_coriza, in_dorGarganta,
                   in_dificuldadeRespirar, in_anosmia, in_disturbiosGastrintestinais,
                   in_astenia, in_hiporexia, in_dispneia, in_print_state=False):
-    # Definição
+    # DEFINIÇÃO
     # Tosse
     # Febre
     # Coriza
@@ -27,7 +27,7 @@ def avaliar_covid(in_met_defuzz,
     # Diminuição do apetite (hiporexia)
     # Dispnéia ( falta de ar)
 
-    # Antecedentes
+    # ANTECEDENTES
     tosse = ctrl.Antecedent(np.arange(0, 100, 0.1), 'tosse')
     febre = ctrl.Antecedent(np.arange(0, 100, 0.1), 'febre')
     coriza = ctrl.Antecedent(np.arange(0, 100, 0.1), 'coriza')
@@ -39,14 +39,17 @@ def avaliar_covid(in_met_defuzz,
     hiporexia = ctrl.Antecedent(np.arange(0, 100, 0.1), 'hiporexia')
     dispneia = ctrl.Antecedent(np.arange(0, 100, 0.1), 'dispneia')
 
-    # Consequentes
-
+    # CONSEQUENTE
     # Chance de estar com covid19
     chanceEstarContaminado = ctrl.Consequent(np.arange(0, 100, 0.1), 'chanceEstarContaminado',
                                              defuzzify_method=in_met_defuzz)
     chanceEstarContaminado.accumulation_method = acc
 
-    # Entradas
+
+
+
+
+    # ENTRADAS
     # Tosse
     tosse['baixa'] = fuzz.trimf(tosse.universe, [0, 0, 35])
     tosse['media'] = fuzz.trimf(tosse.universe, [20, 45, 85])
@@ -97,13 +100,33 @@ def avaliar_covid(in_met_defuzz,
     dispneia['media'] = fuzz.trimf(dispneia.universe, [20, 45, 85])
     dispneia['alta'] = fuzz.trimf(dispneia.universe, [70, 100, 100])
 
-    # Saídas
+
+    # SAÍDA
     chanceEstarContaminado['baixa'] = fuzz.trimf(chanceEstarContaminado.universe, [0, 0, 45])
     chanceEstarContaminado['media'] = fuzz.trimf(chanceEstarContaminado.universe, [20, 45, 85])
     chanceEstarContaminado['alta'] = fuzz.trimf(chanceEstarContaminado.universe, [70, 100, 100])
 
     # REGRAS COVID
 
+    #ARILDO:5
+    #TOSSE
+    #FEBRE
+    #CORIZA
+    #DORGARGANTA
+    #DIFICULDADERESPIRAR
+
+    # NIKOLLAS:5
+    # ANOSMIA
+    # DISTURBIOSGASTRINTESTINAIS
+    # ASTENIA
+    # HIPOREXIA
+    # DISPONIA
+
+    #SAÍDA PARA TODOS: CHANCEESTARCONTAMINADO
+
+
+
+    ## ------------- REGRAS -----------
     #Tosse Baixa
 
     r1 = ctrl.Rule(
@@ -186,7 +209,6 @@ def avaliar_covid(in_met_defuzz,
 
 
 
-    #Em dúvida sobre as regras
 
 
 
@@ -196,9 +218,8 @@ def avaliar_covid(in_met_defuzz,
 
 
 
-
-
-    chanceEstarContaminado_ctrl = ctrl.ControlSystem([r1, r2])
+    #AQUI DEVE SER PASSADA TODAS AS REGRAS
+    chanceEstarContaminado_ctrl = ctrl.ControlSystem([r1, r2, r3, r4, r5, r6, r7, r8])
 
     # define o simulador do covid
     chanceEstarContaminado_simul = ctrl.ControlSystemSimulation(chanceEstarContaminado_ctrl)

@@ -1,2 +1,4 @@
 # IAFuzzyCovid
-Sistema em Fuzzy para identificar chance de estar com covid19.
+
+### Fuzzy system to identify probability of having covid19.
+### Sistema Fuzzy para identificar probabilidade de estar com covid19.
